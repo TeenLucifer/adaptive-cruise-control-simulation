@@ -21,6 +21,8 @@ class BaseVehicle:
     def __init__(self, vehicle_param: VehicleParam):
         # 车辆参数信息
         self.vehicle_param = vehicle_param
+        self.jerk = 0.0
+        self.at = 0.0
         self.v = 0.0
         self.x = 0.0
         self.y = 0.0
@@ -32,6 +34,8 @@ class BaseVehicle:
         self.veh_center_line = None
 
     def step(self, delta, acc):
+        self.jerk = (acc - self.at) / self.dt
+        self.at = acc
         delta_v = acc * self.dt
         x_dot   = (self.v + 0.5 * delta_v) * np.cos(self.psi)
         y_dot   = (self.v + 0.5 * delta_v) * np.sin(self.psi)
@@ -83,9 +87,11 @@ class BaseVehicle:
             self.veh_innerline_line.set_data(vehicle_innerline[0, :], vehicle_innerline[1, :])
             self.veh_center_line.set_data(rear_center[0], rear_center[1])
 
-        #axes.plot(vehicle_outline[0, :], vehicle_outline[1, :], color="tab:blue", linewidth=2)
-        #axes.plot(vehicle_innerline[0, :], vehicle_innerline[1, :], color="tab:blue", linewidth=2)
-        #axes.plot(rear_center[0], rear_center[1], 'o', color='tab:red')
+    def set_state(self, x, y, psi, v):
+        self.x = x
+        self.y = y
+        self.psi = psi
+        self.v = v
 
     def normalize_angle(self, angle):
         a = np.fmod(angle + np.pi, 2 * np.pi)

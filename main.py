@@ -8,7 +8,7 @@ def main():
     state = env.reset()
     done = False
     while not done:
-        state, reward, done, _ = env.step(10.0)
+        state, reward, done, _ = env.step(0.0)
         env.render()
     plt.ioff()
     plt.show()
